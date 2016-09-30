@@ -11,6 +11,8 @@ class Backend(object):
     LIBRARY_CLASS = None
     UI_CLASS = None
 
+    CACHE_KEYS = []
+
     def __init__(self, manager=None, test=False):
         self._manager = manager
         self._test = test
@@ -26,6 +28,17 @@ class Backend(object):
     @property
     def c(self):
         return self.command
+
+    @property
+    def cache(self):
+        return self._manager.cache
+
+    def cache_key(self, key):
+        return '{}.{}'.format(self.name, key)
+
+    def clear_cache(self):
+        for key in self.CACHE_KEYS:
+            self.cache.forget(self.cache_key(key))
 
     def config_exists(self):
         return self._manager.config_exists()

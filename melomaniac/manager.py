@@ -2,6 +2,7 @@
 
 import os
 import yaml
+from cachy import CacheManager
 
 from .gmusic import Backend as GMusicBackend
 from .soundcloud import Backend as SoundcloudBackend
@@ -12,7 +13,18 @@ class Manager(object):
     def __init__(self, command):
         self._backends = {}
         self._command = command
-        self._config_file = os.path.join(os.path.expanduser('~'), '.melomaniac.yml')
+        self._home = os.path.join(os.path.expanduser('~'), '.melomaniac')
+        self._config_file = os.path.join(self._home, 'config.yml')
+        self._cache_dir = os.path.join(self._home, 'cache')
+        self._cache = CacheManager({
+            'stores': {
+                'file': {
+                    'driver': 'file',
+                    'path': self._cache_dir
+                }
+            }
+        })
+
         self.register([
             GMusicBackend(),
             SoundcloudBackend()
@@ -21,6 +33,14 @@ class Manager(object):
     @property
     def command(self):
         return self._command
+
+    @property
+    def home(self):
+        return self._home
+
+    @property
+    def cache(self):
+        return self._cache
 
     def config_exists(self):
         return os.path.exists(self._config_file)
@@ -52,6 +72,14 @@ class Manager(object):
         :rtype: Backend or None
         """
         return self._backends.get(name)
+
+    def all(self):
+        """
+        Return all backends.
+
+        :rtype: list
+        """
+        return list(self._backends.values())
 
     def load_config(self, name=None):
         with open(self._config_file) as fd:

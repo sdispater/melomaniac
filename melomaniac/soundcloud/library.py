@@ -12,7 +12,8 @@ from ..player.list import List
 class Library(BaseLibrary):
 
     def __init__(self, backend):
-        self._backend = backend
+        super(Library, self).__init__(backend)
+
         self._favorites = None
         self._stream = None
         self._playlists = None

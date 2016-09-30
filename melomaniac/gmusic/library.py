@@ -17,27 +17,20 @@ from ..player.list import List
 class Library(BaseLibrary):
 
     def __init__(self, backend):
-        self._api = backend.api
+        super(Library, self).__init__(backend)
+
         self._playlists = None
         self._library = None
-        self._cache = CacheManager({
-            'stores': {
-                'file': {
-                    'driver': 'file',
-                    'path': os.path.join(tempfile.gettempdir(), 'melomaniac')
-                }
-            }
-        })
+
+    @property
+    def api(self):
+        return self._backend.api
 
     def get_playlists(self):
         if self._playlists is not None:
             return self._playlists
 
-        #playlists = self._cache.get('playlists', None)
-        #if playlists:
-        #    return playlists
-
-        playlists_ = self._api.get_all_user_playlist_contents()
+        playlists_ = self.api.get_all_user_playlist_contents()
 
         playlists = []
         for playlist_ in playlists_:
@@ -58,17 +51,18 @@ class Library(BaseLibrary):
             playlists.append(playlist)
 
         self._playlists = playlists
-        #self._cache.forever('playlists', self._playlists)
 
         return self._playlists
 
     def get(self):
-        #self._library = self._cache.get('library', None)
-
         if self._library is not None:
             return self._library
 
-        library = self._cache.remember('gmusic.library', 3600, lambda: self._api.get_all_songs())
+        library = self.cache.remember(
+            self.cache_key('library'),
+            24 * 60,
+            lambda: self.api.get_all_songs()
+        )
         self._library = []
         artists_dict = defaultdict(list)
         albums_dict = defaultdict(list)
@@ -89,7 +83,7 @@ class Library(BaseLibrary):
             for i in songs_of_artist:
                 album_name = i.get('album', 'Untitled Album')
                 albums_of_artist_dict[album_name].append(i)
-            albums_of_artist = []
+
             for album, tracks_ in albums_of_artist_dict.items():
                 album_name = album
                 if album == "":
@@ -142,10 +136,10 @@ class Library(BaseLibrary):
                 return track
 
     def get_url(self, track):
-        return self._api.get_stream_url(track.id)
+        return self.api.get_stream_url(track.id)
 
     def search(self, query):
-        results = self._api.search(query)
+        results = self.api.search(query)
 
         artists = []
         albums = []

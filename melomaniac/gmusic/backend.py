@@ -15,6 +15,10 @@ class Backend(BaseBackend):
     LIBRARY_CLASS = Library
     UI_CLASS = UI
 
+    CACHE_KEYS = [
+        'library'
+    ]
+
     def __init__(self, manager=None, test=False):
         super(Backend, self).__init__(manager, test)
 

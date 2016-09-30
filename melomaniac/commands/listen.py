@@ -16,6 +16,7 @@ class ListenCommand(Command):
         {backend=gmusic : The backend to connect to. One of <info>gmusic</> or <info>soundcloud</>}
         {--t|test : Activate test mode.}
         {--c|config : Force reconfiguration.}
+        {--clear-cache : Clear the cache (if any)}
     """
 
     def __init__(self):
@@ -29,6 +30,9 @@ class ListenCommand(Command):
             raise ValueError('Backend [{}] does not exist.'.format(backend))
 
         backend.set_test(self.option('test'))
+
+        if self.option('clear-cache'):
+            backend.clear_cache()
 
         if not backend.is_configured() or self.option('config'):
             backend.configure()
