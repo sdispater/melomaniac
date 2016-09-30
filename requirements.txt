@@ -1,0 +1,8 @@
+cleo
+gmusicapi
+soundcloud
+pyaml
+cachy
+pexpect
+backpack
+simplejson
