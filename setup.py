@@ -3,10 +3,10 @@
 import os
 from setuptools import setup, find_packages
 
+here = os.path.abspath(os.path.dirname(__file__))
 
 def get_version():
-    basedir = os.path.dirname(__file__)
-    with open(os.path.join(basedir, 'melomaniac/version.py')) as f:
+    with open(os.path.join(here, 'melomaniac/version.py')) as f:
         variables = {}
         exec(f.read(), variables)
 
@@ -19,6 +19,11 @@ def get_version():
 
 __version__ = get_version()
 
+
+with open(os.path.join(here, 'requirements.txt')) as f:
+    requirements = f.readlines()
+
+
 setup(
     name='melomaniac',
     license='MIT',
@@ -29,8 +34,8 @@ setup(
     author_email='sebastien@eustace.io',
     url='https://github.com/sdispater/melomaniac',
     download_url='https://github.com/sdispater/melomaniac/archive/%s.tar.gz' % __version__,
-    packages=['melomaniac'],
-    install_requires=['cleo'],
+    packages=find_packages(exclude=['tests']),
+    install_requires=requirements,
     entry_points={
         'console_scripts': ['melomaniac=melomaniac.app:app.run'],
     },
