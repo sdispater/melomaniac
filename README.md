@@ -42,7 +42,7 @@ You need to [acquire a client credential for your application](http://soundcloud
 in order for Melomaniac to work. Both `username` and `password` will only be used once to retrieve API tokens
 and will never be stored.
 
-The configuration is stored in `~/.melomaniac.yml`.
+The configuration is stored in `~/.melomaniac/config.yml`.
 
 
 ### Commands
