@@ -35,7 +35,8 @@ class UI(BaseUI):
 
             artists_by_letter.add_item(letters[char])
 
-        artists_by_letter.add_item(letters['Other'])
+        if 'Other' in letters:
+            artists_by_letter.add_item(letters['Other'])
 
         albums_by_letter = List('Albums')
         letters = {}
@@ -62,7 +63,8 @@ class UI(BaseUI):
 
             albums_by_letter.add_item(letters[char])
 
-        albums_by_letter.add_item(letters['Other'])
+        if 'Other' in letters:
+            albums_by_letter.add_item(letters['Other'])
 
         menu = List(
             'Main Menu',

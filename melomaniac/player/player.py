@@ -72,7 +72,7 @@ class Player(object):
     def _monitor(self, p, s):
         cpl = p.compile_pattern_list([
             pexpect.EOF,
-            "A: (\d{2}):(\d{2}):(\d{2}) \/ (\d{2}):(\d{2}):(\d{2}) \((\d+)%\)"
+            "AV?: (\d{2}):(\d{2}):(\d{2})( \/ (\d{2}):(\d{2}):(\d{2}) \((\d+)%\))?"
         ])
 
         while True:
@@ -92,9 +92,14 @@ class Player(object):
                 hour_current = int(m.group(1))
                 minute_current = int(m.group(2))
                 second_current = int(m.group(3))
-                percent = int(m.group(7))
 
                 s.track_current = hour_current * 3600 + minute_current * 60 + second_current
+
+                if not m.group(4):
+                    percent = s.track_current / s.track.duration * 100
+                else:
+                    percent = int(m.group(8))
+
                 s.track_percent = int(percent)
 
     def is_playing(self):

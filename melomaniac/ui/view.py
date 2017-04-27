@@ -10,6 +10,32 @@ from ..player.list import List
 from ..player.item import Item
 
 
+class Question(object):
+
+    def __init__(self, view, text, y, x):
+        self._view = view
+        self._text = text
+        self._y = y
+        self._x = x
+
+    def display(self):
+        curses.setsyx(self._y, self._x)
+        self._view.scr.clrtoeol()
+        self._view.string(self._text, 0, 0)
+        curses.echo()
+        curses.curs_set(1)
+        self._view.scr.refresh()
+
+        return self
+
+    def response(self):
+        response = self._view.scr.getstr(0, len(self._text) + 1)
+        curses.noecho()
+        curses.curs_set(0)
+
+        return response
+
+
 class View(object):
 
     def __init__(self, ui):
@@ -33,7 +59,6 @@ class View(object):
 
     @property
     def elements(self):
-        elements = []
         if isinstance(self.current, List):
             elements = self.current.items
         elif isinstance(self.current, Artist):
@@ -101,8 +126,7 @@ class View(object):
         self.string(self.player.status, self.height - 1, 0)
 
     def get_search(self):
-        curses.setsyx(0, 13)
-        search = self.scr.getstr()
+        search = self.scr.getstr(0, 13)
         curses.noecho()
         curses.curs_set(0)
 
@@ -111,17 +135,21 @@ class View(object):
     def search_mode(self, search_mode):
         self._search_mode = search_mode
 
-        if search_mode is True:
-            curses.setsyx(0, 0)
-            self.scr.clrtoeol()
-            self.string([('Search for: ', 'blue')], 0, 0)
-            curses.echo()
-            curses.curs_set(1)
+        #if search_mode is True:
+        #    curses.setsyx(0, 0)
+        #    self.scr.clrtoeol()
+        #    s = 'Search for: '
+        #    self.line(s, 0, len(s), color='blue')
+        #    curses.echo()
+        #    curses.curs_set(1)
 
         return self
 
     def in_search_mode(self):
         return self._search_mode
+
+    def ask(self, y, x, question):
+        return Question(self, question, y, x).display()
 
     def main(self):
         elements = self.elements

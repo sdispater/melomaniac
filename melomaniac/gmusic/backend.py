@@ -35,7 +35,7 @@ class Backend(BaseBackend):
 
     def load(self):
         if self._test:
-            return TestLibrary
+            return TestLibrary(self)
 
         self.c.line('<comment>-</> Loading config.')
         self.config = self.load_config()

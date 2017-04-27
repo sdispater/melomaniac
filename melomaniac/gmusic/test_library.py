@@ -11,8 +11,9 @@ from .library import Library
 
 class TestLibrary(Library):
 
-    def __init__(self):
-        super(TestLibrary, self).__init__(None)
+    def __init__(self, backend):
+        super(TestLibrary, self).__init__(backend)
+
         self._playlists = [
             Playlist(self, '1', 'My Playlist')
         ]

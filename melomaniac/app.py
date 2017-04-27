@@ -7,7 +7,7 @@ from .commands.listen import ListenCommand
 from .commands.cache_clear import CacheClearCommand
 
 
-app = Application('Melomaniac', VERSION)
+app = Application('Melomaniac', VERSION, True)
 
 app.add(ListenCommand())
 app.add(CacheClearCommand())

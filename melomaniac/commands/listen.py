@@ -25,7 +25,7 @@ class ListenCommand(Command):
         self.manager = Manager(self)
 
     def handle(self):
-        backend = self.manager.get(self.argument('backend'))
+        backend = self.backend(self.argument('backend'))
         if not backend:
             raise ValueError('Backend [{}] does not exist.'.format(backend))
 
@@ -46,3 +46,5 @@ class ListenCommand(Command):
 
         backend.close()
 
+    def backend(self, backend):
+        return self.manager.get(backend)

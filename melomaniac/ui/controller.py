@@ -16,32 +16,34 @@ class Controller(object):
         self.scr = view.scr
 
     def handle(self):
+        question = None
         while True:
             c = self.scr.getch()
             if self.view.in_search_mode():
-                if c in [curses.KEY_BACKSPACE, curses.KEY_DC, 127]:
-                    y, x = self.scr.getyx()
-                    self.scr.delch(y, x)
+                if not question:
+                    question = self.view.ask(0, 0, 'Search for: ')
 
+                if c == 27:
+                    self.view.search_mode(False)
                     continue
 
                 if not c == ord('\n'):
                     self.view.refresh()
                     continue
 
-                if c == 27:
-                    self.view.search_mode(False)
-                    continue
+                query = question.response()
 
-                query = self.view.get_search()
                 menu = self.player.library.search(query)
                 if self.view.previous:
                     self.view.current = self.view.previous[0]
+                    self.view.previous = []
 
                 self.view.current_item = menu
+                self.view.enter()
+                question = None
                 self.view.search_mode(False)
 
-            if c == -1:
+            elif c == -1:
                 if (not self.player.is_playing()
                     and not self.player.is_paused()
                     and self.player.has_next()):
@@ -102,7 +104,6 @@ class Controller(object):
                 self.player.rewind()
             elif c == ord('s'):
                 self.view.search_mode(True)
-                continue
 
             # Redraw the screen
             self.view.display()

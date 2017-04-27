@@ -16,12 +16,12 @@ class Colors(object):
     }
 
     DEFINITION = {
-        PAIRS['red']: [curses.COLOR_RED, curses.COLOR_BLACK],
-        PAIRS['blue']: [curses.COLOR_BLUE, curses.COLOR_BLACK],
-        PAIRS['green']: [curses.COLOR_GREEN, curses.COLOR_BLACK],
-        PAIRS['cyan']: [curses.COLOR_CYAN, curses.COLOR_BLACK],
-        PAIRS['yellow']: [curses.COLOR_YELLOW, curses.COLOR_BLACK],
-        PAIRS['magenta']: [curses.COLOR_MAGENTA, curses.COLOR_BLACK],
+        PAIRS['red']: [curses.COLOR_RED, -1],
+        PAIRS['blue']: [curses.COLOR_BLUE, -1],
+        PAIRS['green']: [curses.COLOR_GREEN, -1],
+        PAIRS['cyan']: [curses.COLOR_CYAN, -1],
+        PAIRS['yellow']: [curses.COLOR_YELLOW, -1],
+        PAIRS['magenta']: [curses.COLOR_MAGENTA, -1],
     }
 
     def __init__(self):
@@ -45,11 +45,15 @@ class Colors(object):
         }
 
         curses.start_color()
+        curses.use_default_colors()
         for definition, (color, background) in self.DEFINITION.items():
             curses.init_pair(definition, color, background)
 
     def get(self, color):
         return self._colors[color]
+
+    def pair(self, color):
+        return self.PAIRS[color]
 
     def __contains__(self, item):
         return item in self._colors
