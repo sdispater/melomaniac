@@ -39,14 +39,14 @@ class Library(BaseLibrary):
                 if track_['source'] == '1':
                     # We need to find our track :-(
                     track_ = self._search_track_in_library(track_['trackId'])
+                if  'title' in track_:
+                    track = Track(
+                        self,
+                        track_['id'], track_['title'], track_['artist'], track_['album'],
+                        track_['trackNumber'], track_.get('discNumber', 0), metadata=track_
+                    )
 
-                track = Track(
-                    self,
-                    track_['id'], track_['title'], track_['artist'], track_['album'],
-                    track_['trackNumber'], track_.get('discNumber', 0), metadata=track_
-                )
-
-                playlist.add_track(track)
+                    playlist.add_track(track)
 
             playlists.append(playlist)
 
